@@ -1,0 +1,13 @@
+# ide
+.idea
+.vscode
+
+# node_modules
+node_modules
+
+.env
+dist
+
+# log files
+*.log
+logs
