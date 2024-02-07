@@ -18,8 +18,11 @@
     "cross-env": "^7.0.3",
     "dotenv": "^16.4.1",
     "express": "^4.18.2",
+    "express-winston": "^4.2.0",
     "helmet": "^7.1.0",
-    "hpp": "^0.2.3"
+    "hpp": "^0.2.3",
+    "winston": "^3.11.0",
+    "winston-daily-rotate-file": "^4.7.1"
   },
   "devDependencies": {
     "@swc/cli": "^0.1.62",

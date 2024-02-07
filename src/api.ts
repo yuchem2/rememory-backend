@@ -6,6 +6,7 @@ import helmet from 'helmet'
 import cors from 'cors'
 
 import { NODE_ENV, PORT } from '@/config'
+import { loggerMiddleware, logger } from '@/utils/logger'
 
 export default class API {
     app: express.Application
@@ -26,6 +27,7 @@ export default class API {
         this.app.use(express.json())
         this.app.use(express.urlencoded({ extended: true }))
         this.app.use(hpp())
+        this.app.use(loggerMiddleware)
     }
 
     setController() {}
@@ -34,7 +36,7 @@ export default class API {
 
     public listen() {
         this.server = this.app.listen(PORT, () => {
-            console.info(`🚀 App listening on the port: ${PORT} ENV: ${NODE_ENV}`)
+            logger.info(`🚀 App listening on the port: ${PORT} ENV: ${NODE_ENV}`)
         })
     }
 
