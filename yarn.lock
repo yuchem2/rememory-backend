@@ -359,11 +359,6 @@
   dependencies:
     "@types/node" "*"
 
-"@types/jwk-to-pem@^2.0.3":
-  version "2.0.3"
-  resolved "https://registry.yarnpkg.com/@types/jwk-to-pem/-/jwk-to-pem-2.0.3.tgz#ba06bc681c194473e9d8cdb85a835f2dd839fd92"
-  integrity sha512-I/WFyFgk5GrNbkpmt14auGO3yFK1Wt4jXzkLuI+fDBNtO5ZI2rbymyGd6bKzfSBEuyRdM64ZUwxU1+eDcPSOEQ==
-
 "@types/keyv@^3.1.4":
   version "3.1.4"
   resolved "https://registry.yarnpkg.com/@types/keyv/-/keyv-3.1.4.tgz#3ccdb1c6751b0c7e52300bcdacd5bcbf8faa75b6"
