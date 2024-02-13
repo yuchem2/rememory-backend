@@ -8,6 +8,7 @@ import cors from 'cors'
 import { NODE_ENV, PORT } from '@/config'
 import { loggerMiddleware, logger } from '@/utils/logger'
 import middlewares from '@/middlewares'
+import controllers from '@/controllers'
 
 export default class API {
     app: express.Application
@@ -28,10 +29,13 @@ export default class API {
         this.app.use(express.json())
         this.app.use(express.urlencoded({ extended: true }))
         this.app.use(hpp())
+        this.app.use(middlewares.request.requestId)
         this.app.use(loggerMiddleware)
     }
 
-    setController() {}
+    setController() {
+        this.app.use('/users', controllers.users)
+    }
 
     setPostMiddleware() {
         this.app.use(middlewares.error)

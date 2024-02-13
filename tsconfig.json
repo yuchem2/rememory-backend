@@ -7,7 +7,7 @@
             "esnext.asynciterable"
         ],
         "typeRoots": [
-            "node_modules/@types"
+            "node_modules/@types",
         ],
         "allowSyntheticDefaultImports": true,
         "experimentalDecorators": true,
