@@ -7,6 +7,7 @@ import cors from 'cors'
 
 import { NODE_ENV, PORT } from '@/config'
 import { loggerMiddleware, logger } from '@/utils/logger'
+import middlewares from '@/middlewares'
 
 export default class API {
     app: express.Application
@@ -32,7 +33,9 @@ export default class API {
 
     setController() {}
 
-    setPostMiddleware() {}
+    setPostMiddleware() {
+        this.app.use(middlewares.error)
+    }
 
     public listen() {
         this.server = this.app.listen(PORT, () => {
