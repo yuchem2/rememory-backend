@@ -22,6 +22,24 @@ export class User extends TimeStamps {
         return this.findByFilter({ oauthProvider: oauthProvider, clientId: oauthId, passwd: passwd })
     }
 
+    public static async checkDuplicateId(this: ReturnModelType<typeof User>, id: string): Promise<boolean> {
+        const user = await this.findOne({ clientId: id })
+        if (user) {
+            return true
+        } else {
+            return false
+        }
+    }
+
+    public static async checkDuplicateNickname(this: ReturnModelType<typeof User>, nickname: string): Promise<boolean> {
+        const user = await this.findOne({ nickname: nickname })
+        if (user) {
+            return true
+        } else {
+            return false
+        }
+    }
+
     private static async findByFilter(this: ReturnModelType<typeof User>, filter: object): Promise<User> {
         const user = await this.findOne(filter).exec()
         if (user) {
