@@ -18,4 +18,20 @@ router.post('/login', async (req: Request, res: Response) => {
     res.status(200).json({ jwt: token, nickname: user.nickname })
 })
 
+router.get('/check-id', async (req: Request, res: Response) => {
+    const success = await UserModel.checkDuplicateId(req.body.id)
+    res.status(200).json({
+        success: success,
+        message: !success ? '중복된 아이디 입니다. 다른 아이디를 입력해 주세요.' : undefined,
+    })
+})
+
+router.get('/check-nickname', async (req: Request, res: Response) => {
+    const success = await UserModel.checkDuplicateNickname(req.body.nickname)
+    res.status(200).json({
+        success: success,
+        message: !success ? '중복된 닉네임입니  c다. 다른 닉네임을 입력해 주세요.' : undefined,
+    })
+})
+
 export default router
