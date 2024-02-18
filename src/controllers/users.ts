@@ -13,7 +13,14 @@ router.post('/login', async (req: Request, res: Response) => {
         throw new LoginFailedError()
     } else {
         const token = await signIn(user.oauthProvider, user)
-        res.status(200).json({ jwt: token, nickname: user.nickname })
+        res.cookie('jwt', token, {
+            httpOnly: true,
+            domain: '127.0.0.1',
+            path: '/',
+            expires: new Date(Date.now() + 3600000),
+            sameSite: 'lax',
+        })
+        res.status(200).json({ nickname: user.nickname })
     }
 })
 
