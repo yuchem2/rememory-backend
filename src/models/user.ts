@@ -25,18 +25,18 @@ export class User extends TimeStamps {
     public static async checkDuplicateId(this: ReturnModelType<typeof User>, id: string): Promise<boolean> {
         const user = await this.findOne({ oauthId: id })
         if (user) {
-            return true
-        } else {
             return false
+        } else {
+            return true
         }
     }
 
     public static async checkDuplicateNickname(this: ReturnModelType<typeof User>, nickname: string): Promise<boolean> {
         const user = await this.findOne({ nickname: nickname })
         if (user) {
-            return true
-        } else {
             return false
+        } else {
+            return true
         }
     }
 
