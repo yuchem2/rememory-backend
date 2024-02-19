@@ -6,6 +6,18 @@ import { LoginFailedError } from '@/types/errors'
 
 const router = asyncify(express.Router())
 
+router.post('/signup', async (req: Request, res: Response) => {
+    // TODO: add Oauth 2.0 signup
+    // TODO: passwd decryption & encryption
+    await UserModel.create({
+        oauthProvider: req.body.provider,
+        clientId: req.body.id,
+        passwd: req.body.passwd,
+        nickname: req.body.nickname,
+    })
+    res.sendStatus(204)
+})
+
 router.post('/login', async (req: Request, res: Response) => {
     // TODO: passwd decryption & encryption
     const user = await UserModel.findByOauth(req.body.provider, req.body.id)
