@@ -6,7 +6,7 @@ import { signIn } from '@/services/user'
 const router = asyncify(express.Router())
 
 router.post('/signup', async (req: Request, res: Response) => {
-    // TODO: id unique validation
+    // TODO: add Oauth 2.0 signup
     // TODO: passwd decryption & encryption
     await UserModel.create({
         oauthProvider: req.body.provider,
