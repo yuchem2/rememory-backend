@@ -45,6 +45,7 @@ router.get('/check-id/:id', async (req: Request, res: Response) => {
 })
 
 router.get('/check-nickname/:nickname', async (req: Request, res: Response) => {
+    console.log(req.params.nickname)
     const success = await UserModel.checkDuplicateNickname(req.params.nickname)
     res.status(200).json({
         success: success,
