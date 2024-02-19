@@ -7,7 +7,10 @@ export class User extends TimeStamps {
     public _id: mongoose.Types.ObjectId
 
     @prop({ required: true })
-    public clientId: string
+    public oauthProvider: string
+
+    @prop({ required: true })
+    public oauthId: string
 
     @prop({ required: true })
     public nickname: string
@@ -15,15 +18,12 @@ export class User extends TimeStamps {
     @prop({ required: true })
     public passwd: string
 
-    @prop()
-    public oauthProvider: string
-
-    public static async login(this: ReturnModelType<typeof User>, oauthProvider: string, oauthId: string, passwd: string): Promise<User> {
-        return this.findByFilter({ oauthProvider: oauthProvider, clientId: oauthId, passwd: passwd })
+    public static async findByOauth(this: ReturnModelType<typeof User>, oauthProvider: string, oauthId: string): Promise<User> {
+        return await this.findByFilter({ oauthProvider: oauthProvider, oauthId: oauthId })
     }
 
     public static async checkDuplicateId(this: ReturnModelType<typeof User>, id: string): Promise<boolean> {
-        const user = await this.findOne({ clientId: id })
+        const user = await this.findOne({ oauthId: id })
         if (user) {
             return true
         } else {

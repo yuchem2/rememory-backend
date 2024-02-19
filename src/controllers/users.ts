@@ -2,20 +2,26 @@ import express, { Request, Response } from 'express'
 import asyncify from 'express-asyncify'
 import { UserModel } from '@/models/user'
 import { signIn } from '@/services/user'
+import { LoginFailedError } from '@/types/errors'
 
 const router = asyncify(express.Router())
 
 router.post('/login', async (req: Request, res: Response) => {
     // TODO: passwd decryption & encryption
-    const loginInfo = {
-        provider: req.body.provider,
-        clientId: req.body.clientId,
-        passwd: req.body.passwd,
+    const user = await UserModel.findByOauth(req.body.provider, req.body.id)
+    if (user.passwd !== req.body.passwd) {
+        throw new LoginFailedError()
+    } else {
+        const token = await signIn(user.oauthProvider, user)
+        res.cookie('jwt', token, {
+            httpOnly: true,
+            domain: '127.0.0.1',
+            path: '/',
+            expires: new Date(Date.now() + 3600000),
+            sameSite: 'lax',
+        })
+        res.status(200).json({ nickname: user.nickname })
     }
-
-    const user = await UserModel.login(loginInfo.provider, loginInfo.clientId, loginInfo.passwd)
-    const token = await signIn(loginInfo.provider, user)
-    res.status(200).json({ jwt: token, nickname: user.nickname })
 })
 
 router.get('/check-id/:id', async (req: Request, res: Response) => {
