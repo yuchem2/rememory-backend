@@ -41,7 +41,7 @@ export default class API {
 
     setController() {
         this.app.use('/users', controllers.users)
-        this.app.use('/auth', controllers.authentications)
+        this.app.use('/auth', controllers.auth)
     }
 
     setPostMiddleware() {

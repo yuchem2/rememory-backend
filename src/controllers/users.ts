@@ -4,13 +4,13 @@ import bcrypt from 'bcrypt'
 import { UserModel } from '@/models/user'
 import { signIn } from '@/services/user'
 import { LoginFailedError } from '@/types/errors'
-import { decodeRSA } from '@/services/rsa'
+import { decodePasswd } from '@/services/keyManager'
 
 const router = asyncify(express.Router())
 
 router.post('/signup', async (req: Request, res: Response) => {
     // TODO: add Oauth 2.0 signup
-    const passwd = decodeRSA(req.body.passwd)
+    const passwd = decodePasswd(req.body.iv, req.body.tag, req.body.passwd)
     const hashPasswd = await bcrypt.hash(passwd, 10)
 
     await UserModel.create({
@@ -24,7 +24,7 @@ router.post('/signup', async (req: Request, res: Response) => {
 
 router.post('/login', async (req: Request, res: Response) => {
     const user = await UserModel.findByOauth(req.body.provider, req.body.id)
-    const passwd = decodeRSA(req.body.passwd)
+    const passwd = decodePasswd(req.body.iv, req.body.tag, req.body.passwd)
     const match = await bcrypt.compare(passwd, user.passwd)
     if (!match) {
         throw new LoginFailedError()

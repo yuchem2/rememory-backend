@@ -1,7 +1,7 @@
 import users from './users'
-import authentications from './authentications'
+import auth from './auth'
 
 export default {
     users,
-    authentications,
+    auth,
 }
