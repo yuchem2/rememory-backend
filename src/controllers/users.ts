@@ -3,7 +3,7 @@ import asyncify from 'express-asyncify'
 import bcrypt from 'bcrypt'
 import { UserModel } from '@/models/user'
 import { signIn } from '@/services/user'
-import { LoginFailedError } from '@/types/errors'
+import { LoginFailedError, SignupFailError } from '@/types/errors'
 import { decodePasswd } from '@/services/keyManager'
 
 const router = asyncify(express.Router())
@@ -13,13 +13,17 @@ router.post('/signup', async (req: Request, res: Response) => {
     const passwd = decodePasswd(req.body.iv, req.body.tag, req.body.passwd)
     const hashPasswd = await bcrypt.hash(passwd, 10)
 
-    await UserModel.create({
-        oauthProvider: req.body.provider,
-        oauthId: req.body.id,
-        passwd: hashPasswd,
-        nickname: req.body.nickname,
-    })
-    res.sendStatus(204)
+    if ((await UserModel.checkDuplicateNickname(req.body.nickname)) && (await UserModel.checkDuplicateId(req.body.id, req.body.provider))) {
+        await UserModel.create({
+            oauthProvider: req.body.provider,
+            oauthId: req.body.id,
+            passwd: hashPasswd,
+            nickname: req.body.nickname,
+        })
+        res.sendStatus(204)
+    } else {
+        throw new SignupFailError()
+    }
 })
 
 router.post('/login', async (req: Request, res: Response) => {
@@ -30,7 +34,7 @@ router.post('/login', async (req: Request, res: Response) => {
         throw new LoginFailedError()
     } else {
         const token = await signIn(user.oauthProvider, user)
-        res.cookie('jwt', token, {
+        res.cookie('Authorization', token, {
             httpOnly: true,
             domain: '127.0.0.1',
             path: '/',
@@ -42,7 +46,8 @@ router.post('/login', async (req: Request, res: Response) => {
 })
 
 router.get('/check-id/:id', async (req: Request, res: Response) => {
-    const success = await UserModel.checkDuplicateId(req.params.id)
+    const provider = req.query.provider as string
+    const success = await UserModel.checkDuplicateId(req.params.id, provider)
     res.status(200).json({
         success: success,
         message: !success ? '중복된 아이디 입니다. 다른 아이디를 입력해 주세요.' : undefined,
