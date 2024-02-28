@@ -47,10 +47,8 @@ router.post('/login', async (req: Request, res: Response) => {
 })
 
 router.post('/logout', verifyUser, async (req: Request, res: Response) => {
-    if (req.user) {
-        res.clearCookie('Authorization')
-        res.sendStatus(204)
-    }
+    res.clearCookie('Authorization')
+    res.sendStatus(204)
 })
 
 router.get('/check-id/:id', async (req: Request, res: Response) => {
