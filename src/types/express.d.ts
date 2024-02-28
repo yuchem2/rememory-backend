@@ -6,6 +6,9 @@ declare global {
             _routeWhitelists: { body: string[] }
             _routeBlacklists: { body: string[] }
             user: User
+            cookies: {
+                Authorization: string
+            }
         }
         interface Response {
             meta: {
