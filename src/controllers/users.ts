@@ -5,6 +5,7 @@ import { UserModel } from '@/models/user'
 import { signIn } from '@/services/user'
 import { LoginFailedError, SignupFailError } from '@/types/errors'
 import { decodePasswd } from '@/services/keyManager'
+import { verifyUser } from '@/middlewares/user'
 
 const router = asyncify(express.Router())
 
@@ -34,7 +35,7 @@ router.post('/login', async (req: Request, res: Response) => {
         throw new LoginFailedError()
     } else {
         const token = await signIn(user.oauthProvider, user)
-        res.cookie('Authorization', token, {
+        res.cookie('Authorization', `Bearer ${token}`, {
             httpOnly: true,
             domain: '127.0.0.1',
             path: '/',
@@ -42,6 +43,13 @@ router.post('/login', async (req: Request, res: Response) => {
             sameSite: 'lax',
         })
         res.status(200).json({ nickname: user.nickname })
+    }
+})
+
+router.post('/logout', verifyUser, async (req: Request, res: Response) => {
+    if (req.user) {
+        res.clearCookie('Authorization')
+        res.sendStatus(204)
     }
 })
 
